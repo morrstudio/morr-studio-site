@@ -61,10 +61,11 @@ export default function Component() {
         setSubmitMessage('Application submitted successfully!');
         event.currentTarget.reset();
       } else {
+        console.error('Server responded with an error:', data);
         setSubmitMessage(`Error: ${data.message}`);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error submitting form:', error);
       setSubmitMessage('An error occurred. Please try again later.');
     } finally {
       setIsSubmitting(false);
