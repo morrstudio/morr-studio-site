@@ -1,0 +1,12 @@
+{
+    "css.validate": false,
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.experimental.classRegex": [
+      "tw`([^`]*)",
+      "tw\\.[^`]+`([^`]*)`",
+      "tw\\(.*?\\).*?`([^`]*)"
+    ],
+    "editor.quickSuggestions": {
+      "strings": true
+    }
+  }
