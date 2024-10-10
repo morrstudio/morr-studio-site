@@ -59,7 +59,8 @@ export default function Component() {
         setSubmitMessage('Application submitted successfully!')
         event.currentTarget.reset()
       } else {
-        setSubmitMessage('Error submitting application. Please try again.')
+        const errorData = await response.json()
+        setSubmitMessage(`Error submitting application: ${errorData.message || 'Please try again.'}`)
       }
     } catch (error) {
       console.error('Error:', error)
@@ -351,9 +352,12 @@ export default function Component() {
                   <Input placeholder="Your Name" name="name" type="text" required className="bg-white" />
                   <Input placeholder="Your Email" name="email" type="email" required className="bg-white" />
                   <Textarea placeholder="Tell us about your experience in AI/ML and SaaS product development" name="experience" required className="bg-white" />
-                  <Input placeholder="LinkedIn Profile" name="linkedin" type="url" required className="bg-white" />
-                  <Input placeholder="GitHub Profile" name="github" type="url" required className="bg-white" />
-                  <Input placeholder="Social Media / YouTube Channel" name="social" type="url" required className="bg-white" />
+                  <Input placeholder="LinkedIn Profile (optional)" name="linkedin" type="url" className="bg-white" />
+                  <Input placeholder="GitHub Profile (optional)" name="github" type="url" className="bg-white" />
+                  <div className="flex gap-4">
+                    <Input placeholder="X (Twitter) Profile (optional)" name="twitter" type="url" className="bg-white flex-1" />
+                    <Input placeholder="YouTube Channel (optional)" name="youtube" type="url" className="bg-white flex-1" />
+                  </div>
                   <Textarea placeholder="Describe your approach to building in public" name="approach" required className="bg-white" />
                   <div className="flex gap-4">
                     <Button 
