@@ -39,22 +39,12 @@ export default function Component() {
   }, [])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setIsSubmitting(true)
-    setSubmitMessage('')
+    event.preventDefault();
+    setIsSubmitting(true);
+    setSubmitMessage('');
 
-    const formData = new FormData(event.currentTarget)
-    const applicationData = Object.fromEntries(formData)
-
-    // Updated required fields to match Airtable column names
-    const requiredFields = ['Name', 'Email', 'Experience', 'Approach to Building']
-    const missingFields = requiredFields.filter(field => !applicationData[field])
-
-    if (missingFields.length > 0) {
-      setSubmitMessage(`Please fill in the following required fields: ${missingFields.join(', ')}`)
-      setIsSubmitting(false)
-      return
-    }
+    const formData = new FormData(event.currentTarget);
+    const applicationData = Object.fromEntries(formData);
 
     try {
       const response = await fetch('/api/submit-application', {
@@ -63,22 +53,23 @@ export default function Component() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(applicationData),
-      })
+      });
+
+      const data = await response.json();
 
       if (response.ok) {
-        setSubmitMessage('Application submitted successfully!')
-        event.currentTarget.reset()
+        setSubmitMessage('Application submitted successfully!');
+        event.currentTarget.reset();
       } else {
-        const errorData = await response.json()
-        setSubmitMessage(`Error submitting application: ${errorData.message || 'Please try again.'}`)
+        setSubmitMessage(`Error: ${data.message}`);
       }
     } catch (error) {
-      console.error('Error:', error)
-      setSubmitMessage('An error occurred. Please try again later.')
+      console.error('Error:', error);
+      setSubmitMessage('An error occurred. Please try again later.');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleScheduleCall = () => {
     window.open('https://calendly.com/max-morrstudio/30min', '_blank')

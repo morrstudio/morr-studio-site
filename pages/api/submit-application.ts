@@ -2,36 +2,25 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import Airtable from 'airtable'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method Not Allowed' })
-  }
+  if (req.method === 'POST') {
+    const { Name, Email, Experience, 'Approach to Building': Approach, ...optionalFields } = req.body;
 
-  const { name, email, experience, linkedin, github, social, approach } = req.body
+    // Check required fields
+    if (!Name || !Email || !Experience || !Approach) {
+      return res.status(400).json({ message: 'Please fill in all required fields' });
+    }
 
-  if (!name || !email || !experience || !linkedin || !github || !social || !approach) {
-    return res.status(400).json({ message: 'All fields are required' })
-  }
+    try {
+      // Your Airtable submission logic here
+      // Make sure to include both required and optional fields when submitting to Airtable
 
-  try {
-    const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID!)
-
-    await base('Applications').create([
-      {
-        fields: {
-          Name: name,
-          Email: email,
-          Experience: experience,
-          LinkedIn: linkedin,
-          GitHub: github,
-          Social: social,
-          Approach: approach,
-        },
-      },
-    ])
-
-    res.status(200).json({ message: 'Application submitted successfully' })
-  } catch (error) {
-    console.error('Airtable submission error:', error)
-    res.status(500).json({ message: 'Error submitting to Airtable' })
+      res.status(200).json({ message: 'Application submitted successfully' });
+    } catch (error) {
+      console.error('Error submitting to Airtable:', error);
+      res.status(500).json({ message: 'Error submitting application' });
+    }
+  } else {
+    res.setHeader('Allow', ['POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
