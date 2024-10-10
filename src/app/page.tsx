@@ -360,23 +360,14 @@ export default function Component() {
                     <Input placeholder="YouTube Channel" name="YouTube Channel" type="url" className="bg-white flex-1" />
                   </div>
                   <Textarea placeholder="Describe your approach to building in public" name="Approach to Building" required className="bg-white" />
-                  <div className="flex gap-4">
-                    <Button 
-                      className="flex-1 bg-gradient-to-r from-gray-900 to-gray-700 text-white hover:brightness-110 transition-all duration-300" 
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Submitting...' : 'Apply to Co-Found'}
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                    <Button
-                      onClick={handleScheduleCall}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-300"
-                    >
-                      Schedule a Call
-                      <Calendar className="ml-2 h-5 w-5" />
-                    </Button>
-                  </div>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-gray-900 to-gray-700 text-white hover:brightness-110 transition-all duration-300" 
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Apply to Co-Found'}
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
                 </form>
                 {submitMessage && (
                   <p className={`text-center ${submitMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
