@@ -46,6 +46,16 @@ export default function Component() {
     const formData = new FormData(event.currentTarget)
     const applicationData = Object.fromEntries(formData)
 
+    // Updated required fields to match Airtable column names
+    const requiredFields = ['Name', 'Email', 'Experience', 'Approach to Building']
+    const missingFields = requiredFields.filter(field => !applicationData[field])
+
+    if (missingFields.length > 0) {
+      setSubmitMessage(`Please fill in the following required fields: ${missingFields.join(', ')}`)
+      setIsSubmitting(false)
+      return
+    }
+
     try {
       const response = await fetch('/api/submit-application', {
         method: 'POST',
@@ -349,16 +359,16 @@ export default function Component() {
               </div>
               <div className="w-full max-w-md space-y-2">
                 <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-                  <Input placeholder="Your Name" name="name" type="text" required className="bg-white" />
-                  <Input placeholder="Your Email" name="email" type="email" required className="bg-white" />
-                  <Textarea placeholder="Tell us about your experience in AI/ML and SaaS product development" name="experience" required className="bg-white" />
-                  <Input placeholder="LinkedIn Profile (optional)" name="linkedin" type="url" className="bg-white" />
-                  <Input placeholder="GitHub Profile (optional)" name="github" type="url" className="bg-white" />
+                  <Input placeholder="Your Name" name="Name" type="text" required className="bg-white" />
+                  <Input placeholder="Your Email" name="Email" type="email" required className="bg-white" />
+                  <Textarea placeholder="Tell us about your experience in AI/ML and SaaS product development" name="Experience" required className="bg-white" />
+                  <Input placeholder="LinkedIn Profile" name="LinkedIn Profile" type="url" className="bg-white" />
+                  <Input placeholder="GitHub Profile" name="GitHub Profile" type="url" className="bg-white" />
                   <div className="flex gap-4">
-                    <Input placeholder="X (Twitter) Profile (optional)" name="twitter" type="url" className="bg-white flex-1" />
-                    <Input placeholder="YouTube Channel (optional)" name="youtube" type="url" className="bg-white flex-1" />
+                    <Input placeholder="X (Twitter) Profile" name="X Account" type="url" className="bg-white flex-1" />
+                    <Input placeholder="YouTube Channel" name="YouTube Channel" type="url" className="bg-white flex-1" />
                   </div>
-                  <Textarea placeholder="Describe your approach to building in public" name="approach" required className="bg-white" />
+                  <Textarea placeholder="Describe your approach to building in public" name="Approach to Building" required className="bg-white" />
                   <div className="flex gap-4">
                     <Button 
                       className="flex-1 bg-gradient-to-r from-gray-900 to-gray-700 text-white hover:brightness-110 transition-all duration-300" 
