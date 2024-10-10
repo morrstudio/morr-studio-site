@@ -5,22 +5,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     console.log('Received form data:', req.body);
 
-    const { Name, Email, Experience, 'Approach to Building': Approach, ...optionalFields } = req.body;
+    const expectedFields = ['Name', 'Email', 'Experience', 'Approach to Building', 'LinkedIn Profile', 'GitHub Profile', 'X Account', 'YouTube Channel'];
+    const missingFields = expectedFields.filter(field => !(field in req.body));
 
-    // Check required fields
-    if (!Name || !Email || !Experience || !Approach) {
-      console.log('Missing required fields');
-      return res.status(400).json({ message: 'Please fill in all required fields' });
+    if (missingFields.length > 0) {
+      console.log('Missing fields:', missingFields);
+      return res.status(400).json({ message: `Missing fields: ${missingFields.join(', ')}` });
     }
+
+    const { Name, Email, Experience, 'Approach to Building': Approach, ...optionalFields } = req.body;
 
     try {
       // Check if environment variables are set
-      if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
-        throw new Error('Airtable API key or Base ID is not set');
+      const apiKey = process.env.AIRTABLE_API_KEY;
+      const baseId = process.env.AIRTABLE_BASE_ID;
+      if (!apiKey || !baseId) {
+        throw new Error('Airtable API key or Base ID is missing');
       }
 
       // Initialize Airtable
-      const base = new Airtable({apiKey: process.env.AIRTABLE_API_KEY}).base(process.env.AIRTABLE_BASE_ID);
+      const base = new Airtable({apiKey}).base(baseId);
 
       console.log('Attempting to create record in Airtable');
       
